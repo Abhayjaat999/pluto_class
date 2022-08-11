@@ -3,6 +3,7 @@ let app = express()
 const myHelper = require('../util/helper')
 const underscore = require('underscore');
 const { application } = require('express');
+const { result } = require('underscore');
 const router = express.Router();
 
 /*
@@ -77,20 +78,48 @@ let player =
    ]
 
    router.post('/players', function (req, res) {
-
     let ele=req.body
     for ( i=0 ; i<player.length;i++){
       let object=player[i];
       if(object.name==ele.name){
         res.send("players alredy Added in List")
         break;
-      }
-
-    }
+      } }
     player.push(ele)
-    
        res.send(  { data: player , status: true }  )
    })
+
+
+
+
+   let persons=[
+    { name:"PK" , age:15 , votingStatus:false },
+    { name:"SK" , age:18 , votingStatus:false },
+    { name:"AK" , age:25 , votingStatus:false },
+    { name:"RK" , age:35 , votingStatus:false },
+    { name:"SC" , age:50 , votingStatus:false },
+    { name:"BK" , age:61 , votingStatus:false }
+    ]
+    router.get("/quary41",function(req,res){
+    
+      let input=req.query.input
+      
+        let finalArr=[]
+
+        for(i=0;i<persons.length;i++){
+         
+          if (persons[i].age>=input){
+
+          persons[i].votingStatus=true
+          
+          finalArr.push(persons[i])
+          
+        }}
+        res.send({data:finalArr})
+      })
+    
+    
+
 
    let players={
                 "bookingNumber" : 1,
@@ -129,6 +158,9 @@ let player =
 });
 
 
+
+
+
    router.get("/quary",function(req,res){
     let marks=req.query.marks
     let result=marks>35 ?"pass":"fail"
@@ -142,6 +174,8 @@ let player =
     res.send({data:data,status:true})
    })
    
+
+
    let arr=[12,54,84,75,62,14,67,95,457]
    router.post("/post-quary-2",function(req,res){
     let input=req.query.input
