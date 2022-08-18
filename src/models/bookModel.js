@@ -1,18 +1,11 @@
 const mongoose=require('mongoose');
 
-const bookSchema=new mongoose.Schema({
-    bookName:String,
-    authorName: String,
-    category:{ type:String, enum:["Nobal","Si-fi", "Horrer"]},
-    year:Number,
-    totalPages:Number,
-    tags : [String],
-    date:{ type:Date, default: Date.now },
-    stockAvailable:Boolean,
-    prices:{indian:String, european:String},
-    
-    sales:{type: Number, default:20}
 
+const bookSchema=new mongoose.Schema({
+    bookName:String ,
+    authorId : Number,
+    price : Number ,
+    ratings : Number
 },{timestamps:true});
 
-module.exports =mongoose.model('books',bookSchema)
+module.exports =mongoose.model('book',bookSchema)

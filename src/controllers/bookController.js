@@ -1,58 +1,79 @@
 const bookModel=require("../models/bookModel.js")
+const authorModel=require("../models/authorModel.js")
 
 const createBook = async function (req, res) {
     let data = req.body;
     let savedData = await bookModel.create(data);
     res.send({ msg: savedData });
 };
-
-
-const getAllBooks = async function (req, res) {
-    let allBooks = await bookModel.find().select( {bookName: 1,authorName:1,_id:0});
-    res.send({ msg: allBooks });
+const createAuthor = async function (req, res) {
+    let data = req.body;
+    let savedData = await authorModel.create(data);
+    res.send({ msg: savedData });
 };
 
-const getBooksInYear = async function (req, res) {
-    let year = req.query.year;
-    let allBooks = await bookModel.find({year:year});
-    res.send({ msg: allBooks });
-};
 
-const getParticularBooks = async function (req, res) {
-    let allBooks = await bookModel.find(req.body);
-    res.send({ msg: allBooks });
-};
+const authorAllBooks =async function(req,res){
+    let myauthor= await authorModel.findOne( {authorName:"Chetan Bhagat"})
+    console.log(myauthor);
+    let allBooks= await bookModel.find({authorId:myauthor.authorId}).select({bookName:1})
+    res.send({msg: allBooks})
+}
 
-const getXINRBooks = async function (req, res) {
-    let allBooks = await bookModel.find({$or: [{ "prices.indian":{$eq: "1600INR"}},{ "prices.indian":{$eq: "1805INR"}}]});
-    res.send({ msg: allBooks });
-};
+const findAndUpdate =async function(req,res){
+    let myBook= await bookModel.findOneAndUpdate( {bookName: "Two states"},{$set :{price: 150}},{new :true});
+    console.log(myBook);
+    let authorData= await authorModel.find({authorId:myBook.authorId}).select({authorName:1})
+    res.send({msg: authorData })
+}
 
-const getRandomBooks = async function (req, res) {
-    let allBooks = await bookModel.find({ $or: [{ stockAvailable: true }, { pages: { $gt: 200 } }]});
-    res.send({ msg: allBooks });
-};
-    module.exports.createBook=createBook;
-    module.exports.getAllBooks =getAllBooks 
-    module.exports.getBooksInYear=getBooksInYear
-    module.exports.getParticularBooks=getParticularBooks
-    module.exports.getXINRBooks=getXINRBooks
-    module.exports.getRandomBooks=getRandomBooks
+const booksWithCosts =async function(req,res){
     
+    let allBook=await bookModel.find({price:{ $lte: 50 /* , $lte: 250 */}}).select({authorId:1});
+    var ask =allBook.map(x=> x.authorId);    
+    console.log(allBook);
+    let allAurthor=await authorModel.find({authorId:ask}).select({authorName:1});
+    console.log(allAurthor);
+    res.send({msg:allAurthor})
 
-
-
-    // let allBook=await bookModel.find({authorName:"J. K. Rowling" }).count()
-    // let allBook=await bookModel.find().sort({sales:-1}).limit(3).select({bookName: 1,autherName:1,_id:0}) 
+}
     
-    // Skip element
-    // let allBook=await bookModel.find().sort({sales:-1}).skip(5).limit(3).select({bookName: 1,autherName:1,_id:0})
+    module.exports.createBook=createBook
+    module.exports.createAuthor=createAuthor
+    module.exports.authorAllBooks=authorAllBooks
+    module.exports.findAndUpdate=findAndUpdate
+    module.exports.booksWithCosts=booksWithCosts
 
-    // // Pagination
-    // let page=req.query.page
-    // let allBook=await bookModel.find().sort({sales:-1}).skip(3*(page-1)).limit(3)
-    
-    //  let allBook=await bookModel.find({authorName:{$eq:"J. K. Rowling"} })
-     
-    // let allBook=await bookModel.find({$and:[{sales:{$gt:20}},{sales:{$lt:100}}]}) //or
-    // let allBook=await bookModel.find({sales:{$gt:20,$lt:100}}) 
+
+
+
+
+// const getParticularBooks = async function (req, res) {
+//     let allBooks = await bookModel.find(req.body);
+//     res.send({ msg: allBooks });
+// };
+
+// const getXINRBooks = async function (req, res) {
+//     let allBooks = await bookModel.find({$or: [{ "prices.indian":{$eq: "1600INR"}},{ "prices.indian":{$eq: "1805INR"}}]});
+//     res.send({ msg: allBooks });
+// };
+
+// const getRandomBooks = async function (req, res) {
+//     let allBooks = await bookModel.find({ $or: [{ stockAvailable: true }, { pages: { $gt: 200 } }]});
+//     res.send({ msg: allBooks });
+// };
+
+// const getAllBooks = async function (req, res) {
+//     let allBooks = await bookModel.find( {authorName:"Ram Singh"});
+//     console.log(allBooks);
+//     if(allBooks) res.send({msg :allBooks,condition :true})
+
+//    else res.send({ msg:"No books Found", condition:false });
+// };
+
+// const updateBooks = async function (req, res) {
+//     let data = req.body;
+//     let allBooks = await bookModel.updateMany(
+//         {authorName:"Ram Singh"},{$set:data});
+//     res.send({ msg: allBooks });
+// };

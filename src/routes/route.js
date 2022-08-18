@@ -7,7 +7,7 @@ const userController=require("../controllers/userController.js");
 
 const bookModel = require("../models/bookModel.js");
 const bookController=require("../controllers/bookController.js");
-
+// const authorController=require("../controllers/authorController.js");
 
 router.get('/test-me', function (req, res) {
    res.send("hi ! My name is Abhay Singh")
@@ -17,11 +17,12 @@ router.get('/test-me', function (req, res) {
 // router.get('/getallUsers',userController.getUserData );
 
 router.post('/createBook', bookController.createBook );
-router.get('/getAllBooks',bookController. getAllBooks );
-router.get('/getBooksInYear',bookController.getBooksInYear );
-router.get('/getParticularBooks',bookController.getParticularBooks );
-router.get('/getXINRBooks',bookController.getXINRBooks );
-router.get('/getRandomBooks',bookController.getRandomBooks );
+router.post('/createAuthor',bookController.createAuthor);
+router.get('/authorAllBooks',bookController.authorAllBooks);
+router.get('/findAndUpdate',bookController.findAndUpdate);
+router.get('/booksWithCosts',bookController.booksWithCosts);
+// router.get('/getParticularBooks',bookController.getParticularBooks );
+
 
 module.exports = router; 
 
